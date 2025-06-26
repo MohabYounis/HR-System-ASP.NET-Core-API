@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HR_System.DataAccessLayer.Models
+namespace HR_System.Core.Entities
 {
-    public class Department
+    public class Department : BaseEntity
     {
         [Key]
         public int Number { get; set; }

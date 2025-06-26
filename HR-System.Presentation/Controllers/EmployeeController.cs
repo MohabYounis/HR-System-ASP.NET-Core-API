@@ -1,7 +1,7 @@
-﻿using HR_System.DataAccessLayer.HelpingClasses;
-using HR_System.DataAccessLayer.Models;
-using HR_System.Services.Services;
-using Microsoft.AspNetCore.Http;
+﻿using HR_System.Core.Entities;
+using HR_System.Core.Services.Contract;
+using HR_System.Core.Specifications.EmployeeSpecifications;
+using HR_System.Presentation.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HR_System.Presentation.Controllers
@@ -16,17 +16,39 @@ namespace HR_System.Presentation.Controllers
             _employeeService = employeeService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetEmployees()
+
+        [HttpGet("Active")]
+        public async Task<ActionResult> GetActiveEmployees()
         {
-            var employee = await _employeeService.GetItemAsyncWithExpression(criteria: e => e.Salary > 9000);
-            var employeeDTO = new
-            {
-                Id = employee.SSN,
-                FullName = employee.FName + " " + employee.LName,
-                Salary = employee.Salary,
-            };
-            return Ok(employeeDTO);
+            var employees = await _employeeService.GetExistAsync();
+            return Ok(employees);
         }
+
+
+        [HttpGet]
+        public async Task<ActionResult> GetAllEmployees([FromQuery] EmployeeSpecParams specParams)
+        {
+            var dataSpec = new EmployeeWithDepartmentSpecifications(specParams);
+            var items = await _employeeService.GetAllWithSpecAsync(dataSpec);
+
+            var countSpec = new EmployeeWithFilterationForCountSpecifications(specParams); 
+            var count = await _employeeService.GetCountAsync(countSpec);
+
+            return Ok(GeneralResponse.Success(new Pagination<Employee>(specParams.PageIndex, specParams.PageSize, count, items), "Success"));
+        }
+
+
+        [HttpGet("{ssn:int}")]
+        public async Task<ActionResult> GetEmployee(int ssn)
+        {
+            var spec = new EmployeeWithDepartmentSpecifications(ssn);
+
+            var employee = await _employeeService.GetItemWithSpecAsync(spec);
+            if (employee == null)
+                return NotFound();   
+
+            return Ok(employee);    
+        }
+
     }
 }

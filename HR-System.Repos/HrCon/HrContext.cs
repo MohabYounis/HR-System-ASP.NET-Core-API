@@ -1,8 +1,7 @@
-﻿using HR_System.DataAccessLayer.Models;
+﻿using HR_System.Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace HR_System.Repos.HrCon
 {
