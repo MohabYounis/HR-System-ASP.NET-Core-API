@@ -1,11 +1,12 @@
-﻿using HR_System.DataAccessLayer.Models;
-using HR_System.HR.Core.Interfaces;
+﻿using HR_System.Core.Entities;
+using HR_System.Core.Repositories.Contract;
+using HR_System.Core.UnitsOfWork.Contract;
 using HR_System.Repos.HrCon;
 using HR_System.Repos.Repositories;
 
-namespace HR_System.Repos.UnitOfWorks
+namespace HR_System.Repos.UnitsOfWork
 {
-    public class UnitOfWork : IBaseService
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly HrContext _context;
         private readonly Dictionary<Type, object> _repositories = new();
@@ -13,7 +14,7 @@ namespace HR_System.Repos.UnitOfWorks
         public UnitOfWork(HrContext context) => _context = context;
 
         // Generic method return repository of any entity 
-        public IBaseRepository<TEntity> Repository<TEntity>() where TEntity : class
+        public IBaseRepository<TEntity> Repository<TEntity>() where TEntity : BaseEntity
         {
             // Define the type of entity
             var type = typeof(TEntity);

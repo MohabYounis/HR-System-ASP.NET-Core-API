@@ -1,6 +1,8 @@
-using HR_System.DataAccessLayer.Models;
+using HR_System.Core.Entities;
+using HR_System.Core.Services.Contract;
+using HR_System.Core.UnitsOfWork.Contract;
 using HR_System.Repos.HrCon;
-using HR_System.Repos.UnitOfWorks;
+using HR_System.Repos.UnitsOfWork;
 using HR_System.Services.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,7 +29,7 @@ namespace HR_System.Presentation
             builder.Services.AddIdentity<ApplicationUser, ApplicationRole>().AddEntityFrameworkStores<HrContext>();
             
             // Register Unit Of Work
-            builder.Services.AddScoped<IBaseService, UnitOfWork>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             
             // Register Services
             builder.Services.AddScoped(typeof(IBaseService<>), typeof(BaseService<>));

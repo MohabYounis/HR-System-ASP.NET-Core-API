@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HR_System.DataAccessLayer.Models
+namespace HR_System.Core.Entities
 {
-    public class Employee
+    public class Employee : BaseEntity
     {
         [Key]
         public int SSN { get; set; }
@@ -31,7 +31,7 @@ namespace HR_System.DataAccessLayer.Models
 
         public virtual Department AssignedDepartment { get; set; }
         public virtual Department ManagedDepartment { get; set; }
-        public virtual ICollection<Salary> Salaries { get; } = new List<Salary>(); 
-        public virtual ICollection<AttendanceAndLeave> AttendanceAndLeaveRecordes { get; } = new List<AttendanceAndLeave>(); 
+        public virtual ICollection<Salary> Salaries { get; } = new List<Salary>();
+        public virtual ICollection<AttendanceAndLeave> AttendanceAndLeaveRecordes { get; } = new List<AttendanceAndLeave>();
     }
 }

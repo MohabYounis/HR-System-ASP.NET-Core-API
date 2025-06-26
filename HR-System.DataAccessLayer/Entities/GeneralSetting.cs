@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace HR_System.DataAccessLayer.Models
+namespace HR_System.Core.Entities
 {
-    public class GeneralSetting
+    public class GeneralSetting : BaseEntity
     {
         [Key]
         public int Id { get; set; }

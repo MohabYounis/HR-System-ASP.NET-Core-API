@@ -1,53 +1,38 @@
-﻿using HR_System.HR.Core.Interfaces;
+﻿using HR_System.Core.Entities;
+using HR_System.Core.Repositories.Contract;
+using HR_System.Core.Specifications;
 using HR_System.Repos.HrCon;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace HR_System.Repos.Repositories
 {
-    public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
+    public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : BaseEntity
     {
         protected readonly HrContext _context;
         public BaseRepository(HrContext context) => _context = context;
         
 
-        public IQueryable<TEntity> GetAllAsync() =>_context.Set<TEntity>().AsQueryable();
-        public IQueryable<TEntity> GetExistAsync() =>_context.Set<TEntity>().AsQueryable().Where(e=>!EF.Property<bool>(e,"IsDeleted"));
-        public IQueryable<TEntity> GetAllWithExpression(string[] includes = null, Expression<Func<TEntity, bool>> criteria = null)
-        {
-            var query = GetAllAsync();
+        public async Task<IReadOnlyList<TEntity>> GetAllAsync() 
+            => await _context.Set<TEntity>().ToListAsync();
 
-            if (includes != null)
-                foreach (var include in includes)
-                    query = query.Include(include);
+        public async Task<IReadOnlyList<TEntity>> GetExistAsync() 
+            => await _context.Set<TEntity>().Where(e=>!EF.Property<bool>(e,"IsDeleted")).ToListAsync();
 
-            return query.Where(criteria).AsQueryable();
-        }
-        public IQueryable<TEntity> GetExistWithExpression(string[] includes = null, Expression<Func<TEntity, bool>> criteria = null)
-        {
-            var query = GetExistAsync();
+        public async Task<IReadOnlyList<TEntity>> GetAllWithSpecAsync(ISpecifications<TEntity> spec) 
+            => await SpecificationEvaluator<TEntity>.GetQuery(_context.Set<TEntity>(), spec).ToListAsync();
 
-            if (includes != null)
-                foreach (var include in includes)
-                    query = query.Include(include);
+        public async Task<TEntity> GetByIdAsync(int id) 
+            => await _context.Set<TEntity>().FindAsync(id);
 
-            return query.Where(criteria).AsQueryable();
-        }
+        public async Task<TEntity> GetItemWithSpecAsync(ISpecifications<TEntity> spec) 
+            => await SpecificationEvaluator<TEntity>.GetQuery(_context.Set<TEntity>(), spec).FirstOrDefaultAsync();
 
-        public async Task<TEntity> GetByIdAsync(int id) => await _context.Set<TEntity>().FindAsync(id);
-        public async Task<TEntity> GetItemAsyncWithExpression(string[] includes = null, Expression<Func<TEntity, bool>> criteria = null)
-        {
-            var query = GetAllAsync();
+        public async Task AddAsync(TEntity entity) 
+            => await _context.Set<TEntity>().AddAsync(entity);
 
-            if (includes != null)
-                foreach (var incluse in includes)
-                    query = query.Include(incluse);
+        public void Update(TEntity entity) 
+            => _context.Entry(entity).State = EntityState.Modified;
 
-            return await query.SingleOrDefaultAsync(criteria);
-        }
-
-        public async Task AddAsync(TEntity entity) => await _context.Set<TEntity>().AddAsync(entity);
-        public void Update(TEntity entity) => _context.Entry(entity).State = EntityState.Modified;
         public async Task DeleteAsync(int id)
         {
             var entity = await GetByIdAsync(id);
@@ -69,5 +54,8 @@ namespace HR_System.Repos.Repositories
                 }
             }
         }
+
+        public async Task<int> GetCountAsync(ISpecifications<TEntity> spec)
+            => await SpecificationEvaluator<TEntity>.GetQuery(_context.Set<TEntity>(), spec).CountAsync();
     }
 }

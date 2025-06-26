@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace HR_System.DataAccessLayer.Models
+namespace HR_System.Core.Entities
 {
     public class ApplicationRole : IdentityRole
     {

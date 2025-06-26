@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>HR_System.Presentation</RootNamespace>
   </PropertyGroup>
@@ -18,7 +18,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HR-System.Repos\HR.Repos.csproj" />
     <ProjectReference Include="..\HR-System.Services\HR.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DTOs\" />
+    <Folder Include="Errors\" />
   </ItemGroup>
 
 </Project>
