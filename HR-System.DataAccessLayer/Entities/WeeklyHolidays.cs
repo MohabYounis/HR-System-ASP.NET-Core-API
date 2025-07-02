@@ -11,9 +11,7 @@ namespace HR_System.Core.Entities
         [ForeignKey(nameof(GeneralSetting))]
         public int GId { get; set; }
         [Required]
-
         public string Day { get; set; }
-        public bool IsDeleted { get; set; } = false;
         public virtual GeneralSetting GeneralSetting { get; set; }
     }
 }

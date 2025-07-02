@@ -6,11 +6,12 @@ namespace HR_System.Core.Specifications.EmployeeSpecifications
     {
         public EmployeeWithFilterationForCountSpecifications(EmployeeSpecParams specParams)
             : base(e =>
-                        (string.IsNullOrEmpty(specParams.Search) || e.SSN.ToString().Contains(specParams.Search) ||
-                        (e.FName + " " + e.LName).ToLower().Contains(specParams.Search))                         &&
-                        (!specParams.DepartmentNum.HasValue || e.Dept_Num == specParams.DepartmentNum)           &&
-                        (!specParams.Gender.HasValue || e.Gender == specParams.Gender)
-            ) 
+                        (string.IsNullOrEmpty(specParams.Search) || e.SSN.ToString().StartsWith(specParams.Search) ||
+                         e.FullNameLower.StartsWith(specParams.Search))                                            &&
+                        (!specParams.DepartmentNum.HasValue || e.Dept_Num == specParams.DepartmentNum)             &&
+                        (!specParams.Gender.HasValue || e.Gender == specParams.Gender)                             &&
+                        (specParams.AllEmployees || e.IsDeleted == specParams.AllEmployees)
+            )
         { }
     }
 }

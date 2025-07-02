@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HR_System.Repos.Migrations
 {
     [DbContext(typeof(HrContext))]
-    [Migration("20250617113506_MakeLeaveTimeNullable")]
-    partial class MakeLeaveTimeNullable
+    [Migration("20250702110927_v1")]
+    partial class v1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace HR_System.Repos.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.AnnualHolidays", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.AnnualHolidays", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -40,6 +40,7 @@ namespace HR_System.Repos.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -47,7 +48,7 @@ namespace HR_System.Repos.Migrations
                     b.ToTable("AnnualHolidays");
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.ApplicationRole", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.ApplicationRole", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -80,7 +81,7 @@ namespace HR_System.Repos.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.ApplicationUser", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -157,7 +158,7 @@ namespace HR_System.Repos.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.ApplicationUserRole", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.ApplicationUserRole", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -172,7 +173,7 @@ namespace HR_System.Repos.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.AttendanceAndLeave", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.AttendanceAndLeave", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -186,8 +187,8 @@ namespace HR_System.Repos.Migrations
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
-                    b.Property<int?>("ESSN")
-                        .HasColumnType("int");
+                    b.Property<string>("ESSN")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -202,13 +203,10 @@ namespace HR_System.Repos.Migrations
                     b.ToTable("AttendanceAndLeaves");
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.Department", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.Department", b =>
                 {
                     b.Property<int>("Number")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Number"));
 
                     b.Property<DateOnly>("CreationDate")
                         .HasColumnType("date");
@@ -216,10 +214,11 @@ namespace HR_System.Repos.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("ManagerSSN")
-                        .HasColumnType("int");
+                    b.Property<string>("ManagerSSN")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Number");
@@ -231,13 +230,10 @@ namespace HR_System.Repos.Migrations
                     b.ToTable("Departments");
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.Employee", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.Employee", b =>
                 {
-                    b.Property<int>("SSN")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SSN"));
+                    b.Property<string>("SSN")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
@@ -251,8 +247,12 @@ namespace HR_System.Repos.Migrations
                     b.Property<int?>("Dept_Num")
                         .HasColumnType("int");
 
-                    b.Property<string>("FName")
+                    b.Property<string>("FullName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullNameLower")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Gender")
                         .IsRequired()
@@ -261,16 +261,14 @@ namespace HR_System.Repos.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("LName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Nationality")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Salary")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Salary")
+                        .HasColumnType("money");
 
                     b.Property<string>("Telephone")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<TimeOnly>("checkInTime")
@@ -283,10 +281,12 @@ namespace HR_System.Repos.Migrations
 
                     b.HasIndex("Dept_Num");
 
+                    b.HasIndex("FullNameLower");
+
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.GeneralSetting", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.GeneralSetting", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -308,7 +308,7 @@ namespace HR_System.Repos.Migrations
                     b.ToTable("GeneralSettings");
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.Salary", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.Salary", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -316,20 +316,20 @@ namespace HR_System.Repos.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BasicSalary")
-                        .HasColumnType("int");
+                    b.Property<decimal>("BasicSalary")
+                        .HasColumnType("money");
 
                     b.Property<DateOnly>("CreationDate")
                         .HasColumnType("date");
 
-                    b.Property<int?>("ESSN")
-                        .HasColumnType("int");
+                    b.Property<string>("ESSN")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("NetSalary")
-                        .HasColumnType("int");
+                    b.Property<decimal>("NetSalary")
+                        .HasColumnType("money");
 
                     b.Property<int>("NumberOfAbsenceDays")
                         .HasColumnType("int");
@@ -350,7 +350,7 @@ namespace HR_System.Repos.Migrations
                     b.ToTable("Salaries");
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.WeeklyHolidays", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.WeeklyHolidays", b =>
                 {
                     b.Property<int>("GId")
                         .HasColumnType("int");
@@ -460,15 +460,15 @@ namespace HR_System.Repos.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.ApplicationUserRole", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.ApplicationUserRole", b =>
                 {
-                    b.HasOne("HR_System.DataAccessLayer.Models.ApplicationRole", "Role")
+                    b.HasOne("HR_System.Core.Entities.ApplicationRole", "Role")
                         .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HR_System.DataAccessLayer.Models.ApplicationUser", "User")
+                    b.HasOne("HR_System.Core.Entities.ApplicationUser", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -479,28 +479,28 @@ namespace HR_System.Repos.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.AttendanceAndLeave", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.AttendanceAndLeave", b =>
                 {
-                    b.HasOne("HR_System.DataAccessLayer.Models.Employee", "Employee")
+                    b.HasOne("HR_System.Core.Entities.Employee", "Employee")
                         .WithMany("AttendanceAndLeaveRecordes")
                         .HasForeignKey("ESSN");
 
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.Department", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.Department", b =>
                 {
-                    b.HasOne("HR_System.DataAccessLayer.Models.Employee", "Manager")
+                    b.HasOne("HR_System.Core.Entities.Employee", "Manager")
                         .WithOne("ManagedDepartment")
-                        .HasForeignKey("HR_System.DataAccessLayer.Models.Department", "ManagerSSN")
+                        .HasForeignKey("HR_System.Core.Entities.Department", "ManagerSSN")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Manager");
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.Employee", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.Employee", b =>
                 {
-                    b.HasOne("HR_System.DataAccessLayer.Models.Department", "AssignedDepartment")
+                    b.HasOne("HR_System.Core.Entities.Department", "AssignedDepartment")
                         .WithMany("Employees")
                         .HasForeignKey("Dept_Num")
                         .OnDelete(DeleteBehavior.NoAction);
@@ -508,18 +508,18 @@ namespace HR_System.Repos.Migrations
                     b.Navigation("AssignedDepartment");
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.Salary", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.Salary", b =>
                 {
-                    b.HasOne("HR_System.DataAccessLayer.Models.Employee", "Employee")
+                    b.HasOne("HR_System.Core.Entities.Employee", "Employee")
                         .WithMany("Salaries")
                         .HasForeignKey("ESSN");
 
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.WeeklyHolidays", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.WeeklyHolidays", b =>
                 {
-                    b.HasOne("HR_System.DataAccessLayer.Models.GeneralSetting", "GeneralSetting")
+                    b.HasOne("HR_System.Core.Entities.GeneralSetting", "GeneralSetting")
                         .WithMany("GeneralSettings")
                         .HasForeignKey("GId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -530,7 +530,7 @@ namespace HR_System.Repos.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("HR_System.DataAccessLayer.Models.ApplicationRole", null)
+                    b.HasOne("HR_System.Core.Entities.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -539,7 +539,7 @@ namespace HR_System.Repos.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("HR_System.DataAccessLayer.Models.ApplicationUser", null)
+                    b.HasOne("HR_System.Core.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -548,7 +548,7 @@ namespace HR_System.Repos.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("HR_System.DataAccessLayer.Models.ApplicationUser", null)
+                    b.HasOne("HR_System.Core.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -557,29 +557,29 @@ namespace HR_System.Repos.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("HR_System.DataAccessLayer.Models.ApplicationUser", null)
+                    b.HasOne("HR_System.Core.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.ApplicationRole", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.ApplicationRole", b =>
                 {
                     b.Navigation("UserRoles");
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.ApplicationUser", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("UserRoles");
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.Department", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.Department", b =>
                 {
                     b.Navigation("Employees");
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.Employee", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.Employee", b =>
                 {
                     b.Navigation("AttendanceAndLeaveRecordes");
 
@@ -588,7 +588,7 @@ namespace HR_System.Repos.Migrations
                     b.Navigation("Salaries");
                 });
 
-            modelBuilder.Entity("HR_System.DataAccessLayer.Models.GeneralSetting", b =>
+            modelBuilder.Entity("HR_System.Core.Entities.GeneralSetting", b =>
                 {
                     b.Navigation("GeneralSettings");
                 });

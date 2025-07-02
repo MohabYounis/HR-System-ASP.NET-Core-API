@@ -1,7 +1,6 @@
-﻿using HR_System.Core.Entities;
-using HR_System.Core.Services.Contract;
+﻿using HR_System.Core.Services.Contract;
 using HR_System.Core.Specifications.EmployeeSpecifications;
-using HR_System.Presentation.Helpers;
+using HR_System.Presentation.Generals;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HR_System.Presentation.Controllers
@@ -10,45 +9,57 @@ namespace HR_System.Presentation.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        private readonly IBaseService<Employee> _employeeService;
-        public EmployeeController(IBaseService<Employee> employeeService)
+        private readonly IEmployeeService _employeeService;
+        public EmployeeController(IEmployeeService employeeService)
         {
             _employeeService = employeeService;
         }
 
-
-        [HttpGet("Active")]
-        public async Task<ActionResult> GetActiveEmployees()
-        {
-            var employees = await _employeeService.GetExistAsync();
-            return Ok(employees);
-        }
-
-
+        // Get Employees
         [HttpGet]
         public async Task<ActionResult> GetAllEmployees([FromQuery] EmployeeSpecParams specParams)
         {
-            var dataSpec = new EmployeeWithDepartmentSpecifications(specParams);
-            var items = await _employeeService.GetAllWithSpecAsync(dataSpec);
+            try
+            {
+                var paginatedItems = await _employeeService.GetPaginatedEmployeesWithSortingFilterationSearhing(specParams);
 
-            var countSpec = new EmployeeWithFilterationForCountSpecifications(specParams); 
-            var count = await _employeeService.GetCountAsync(countSpec);
+                if (!paginatedItems.Items.Any())
+                    return NotFound(GeneralResponse.Failure("No employees found."));
 
-            return Ok(GeneralResponse.Success(new Pagination<Employee>(specParams.PageIndex, specParams.PageSize, count, items), "Success"));
+                return Ok(GeneralResponse.Success(paginatedItems, "Employees retrieved successfully."));
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, GeneralResponse.Failure(ex.Message));
+            }
         }
 
 
-        [HttpGet("{ssn:int}")]
-        public async Task<ActionResult> GetEmployee(int ssn)
+        // Get Employee
+        [HttpGet("{ssn:alpha}")]
+        public async Task<ActionResult> GetEmployee(string ssn)
         {
-            var spec = new EmployeeWithDepartmentSpecifications(ssn);
+            try
+            {
+                var employee = await _employeeService.GetEmployeeById(ssn);
 
-            var employee = await _employeeService.GetItemWithSpecAsync(spec);
-            if (employee == null)
-                return NotFound();   
+                if (employee == null)
+                    return NotFound(GeneralResponse.Failure("No employees found."));
 
-            return Ok(employee);    
+                return Ok(GeneralResponse.Success(employee, "Employees retrieved successfully."));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, GeneralResponse.Failure(ex.Message));
+            }
         }
 
+
+        // Add Employee
+        //[HttpPost]
+        //public async Task<ActionResult> AddEmployee()
+        //{
+
+        //}
     }
 }

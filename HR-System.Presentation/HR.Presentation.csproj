@@ -22,9 +22,4 @@
     <ProjectReference Include="..\HR-System.Services\HR.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\" />
-    <Folder Include="Errors\" />
-  </ItemGroup>
-
 </Project>

@@ -1,4 +1,6 @@
-﻿namespace HR_System.Core.Specifications.EmployeeSpecifications
+﻿using System.ComponentModel.Design;
+
+namespace HR_System.Core.Specifications.EmployeeSpecifications
 {
     public class EmployeeSpecParams
     {
@@ -21,5 +23,6 @@
             get { return search; }
             set { search = value?.ToLower(); }
         }
+        public bool AllEmployees { get; set; } = true;
     }
 }

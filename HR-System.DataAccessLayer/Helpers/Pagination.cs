@@ -1,6 +1,6 @@
-﻿namespace HR_System.Presentation.Helpers
+﻿namespace HR_System.Core.Helpers
 {
-    internal class Pagination<T>
+    public class Pagination<T>
     {
         public int PageIndex { get; set; }
         public int PageSize { get; set; }
