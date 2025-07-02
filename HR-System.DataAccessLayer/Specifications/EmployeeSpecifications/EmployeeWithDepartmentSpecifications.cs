@@ -6,10 +6,11 @@ namespace HR_System.Core.Specifications.EmployeeSpecifications
     {
         public EmployeeWithDepartmentSpecifications(EmployeeSpecParams specParams) 
             : base(e =>
-                        (string.IsNullOrEmpty(specParams.Search)       || e.SSN.ToString().Contains(specParams.Search) ||
-                        (e.FName + " " + e.LName).ToLower().Contains(specParams.Search))                               &&
-                        (!specParams.DepartmentNum.HasValue            || e.Dept_Num == specParams.DepartmentNum)      &&
-                        (!specParams.Gender.HasValue                   || e.Gender == specParams.Gender)
+                        (string.IsNullOrEmpty(specParams.Search)       || e.SSN.ToString().StartsWith(specParams.Search) ||
+                         e.FullNameLower.StartsWith(specParams.Search))                                                  &&
+                        (!specParams.DepartmentNum.HasValue            || e.Dept_Num == specParams.DepartmentNum)        &&
+                        (!specParams.Gender.HasValue                   || e.Gender == specParams.Gender)                 &&
+                        (specParams.AllEmployees                       || e.IsDeleted == specParams.AllEmployees)
             )
         {
             addIncludes();
@@ -25,19 +26,19 @@ namespace HR_System.Core.Specifications.EmployeeSpecifications
                         AddOrderByDesc(e => e.Salary);
                         break;
                     default:
-                        AddOrderBy(e => e.FName);
+                        AddOrderBy(e => e.FullNameLower);
                         break;
                 }
             }
             else
             {
-                AddOrderBy(e => e.FName);
+                AddOrderBy(e => e.FullNameLower);
             }
 
             AddPagination((specParams.PageIndex - 1) * specParams.PageSize, specParams.PageSize);
         }
 
-        public EmployeeWithDepartmentSpecifications(int ssn) : base(e => e.SSN == ssn)
+        public EmployeeWithDepartmentSpecifications(string ssn) : base(e => e.SSN == ssn)
         {
             addIncludes();
         }
@@ -45,7 +46,6 @@ namespace HR_System.Core.Specifications.EmployeeSpecifications
         private void addIncludes()
         {
             Includes.Add(e => e.AssignedDepartment);
-            Includes.Add(e => e.ManagedDepartment);
         }
     }
 }

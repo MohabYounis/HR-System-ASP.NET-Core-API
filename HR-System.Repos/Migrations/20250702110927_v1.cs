@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HR_System.Repos.Migrations
 {
     /// <inheritdoc />
-    public partial class MohabCreateTables1 : Migration
+    public partial class v1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,7 @@ namespace HR_System.Repos.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Date = table.Column<DateOnly>(type: "date", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -104,7 +104,7 @@ namespace HR_System.Repos.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -125,7 +125,7 @@ namespace HR_System.Repos.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -145,7 +145,7 @@ namespace HR_System.Repos.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -163,13 +163,13 @@ namespace HR_System.Repos.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -189,7 +189,7 @@ namespace HR_System.Repos.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -208,7 +208,7 @@ namespace HR_System.Repos.Migrations
                         column: x => x.GId,
                         principalTable: "GeneralSettings",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -220,8 +220,8 @@ namespace HR_System.Repos.Migrations
                     AttendanceTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LeaveTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Date = table.Column<DateOnly>(type: "date", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    ESSN = table.Column<int>(type: "int", nullable: true)
+                    ESSN = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -232,11 +232,10 @@ namespace HR_System.Repos.Migrations
                 name: "Departments",
                 columns: table => new
                 {
-                    Number = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Number = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreationDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    ManagerSSN = table.Column<int>(type: "int", nullable: true),
+                    ManagerSSN = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -248,21 +247,20 @@ namespace HR_System.Repos.Migrations
                 name: "Employees",
                 columns: table => new
                 {
-                    SSN = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Telephone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SSN = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FullNameLower = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Telephone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Gender = table.Column<string>(type: "nvarchar(1)", nullable: false),
                     Nationality = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
                     ContractDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    Salary = table.Column<int>(type: "int", nullable: false),
+                    Salary = table.Column<decimal>(type: "money", nullable: false),
                     checkInTime = table.Column<TimeOnly>(type: "time", nullable: false),
                     checkOutTime = table.Column<TimeOnly>(type: "time", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    Dept_Num = table.Column<int>(type: "int", nullable: true)
+                    Dept_Num = table.Column<int>(type: "int", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -280,15 +278,15 @@ namespace HR_System.Repos.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BasicSalary = table.Column<int>(type: "int", nullable: false),
+                    BasicSalary = table.Column<decimal>(type: "money", nullable: false),
                     NumberOfAttendanceDays = table.Column<int>(type: "int", nullable: false),
                     NumberOfAbsenceDays = table.Column<int>(type: "int", nullable: false),
                     TotalAdditionalHours = table.Column<int>(type: "int", nullable: false),
                     TotalDiscountHours = table.Column<int>(type: "int", nullable: false),
-                    NetSalary = table.Column<int>(type: "int", nullable: false),
+                    NetSalary = table.Column<decimal>(type: "money", nullable: false),
                     CreationDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    ESSN = table.Column<int>(type: "int", nullable: true)
+                    ESSN = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -355,6 +353,11 @@ namespace HR_System.Repos.Migrations
                 name: "IX_Employees_Dept_Num",
                 table: "Employees",
                 column: "Dept_Num");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employees_FullNameLower",
+                table: "Employees",
+                column: "FullNameLower");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Salaries_ESSN",

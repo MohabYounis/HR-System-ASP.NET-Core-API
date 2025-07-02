@@ -1,4 +1,4 @@
-﻿namespace HR_System.Presentation.Helpers
+﻿namespace HR_System.Presentation.Generals
 {
     internal class GeneralResponse
     {

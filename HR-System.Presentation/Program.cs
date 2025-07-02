@@ -3,6 +3,7 @@ using HR_System.Core.Services.Contract;
 using HR_System.Core.UnitsOfWork.Contract;
 using HR_System.Repos.HrCon;
 using HR_System.Repos.UnitsOfWork;
+using HR_System.Services.Mapping;
 using HR_System.Services.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,6 +34,10 @@ namespace HR_System.Presentation
             
             // Register Services
             builder.Services.AddScoped(typeof(IBaseService<>), typeof(BaseService<>));
+            builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+
+            // Register AutoMapper
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
             var app = builder.Build();
