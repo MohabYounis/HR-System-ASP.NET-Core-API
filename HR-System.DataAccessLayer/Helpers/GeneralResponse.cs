@@ -1,6 +1,6 @@
-﻿namespace HR_System.Presentation.Generals
+﻿namespace HR_System.Core.Helpers
 {
-    internal class GeneralResponse
+    public class GeneralResponse
     {
         public bool IsSuccess { get; }
         public string Message { get; }
@@ -15,7 +15,7 @@
             Error = error;
         }
 
-        public static GeneralResponse Success(dynamic data, string message) => new(true, data, message, null);
+        public static GeneralResponse Success(string message, dynamic data = default) => new(true, data, message, null);
         public static GeneralResponse Failure(string error) => new(false, default!, null, error);
     }
 }

@@ -33,21 +33,13 @@ namespace HR_System.Repos.Repositories
         public void Update(TEntity entity) 
             => _context.Entry(entity).State = EntityState.Modified;
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(TEntity entity)
         {
-            var entity = await GetByIdAsync(id);
-            if (entity == null)
-                throw new KeyNotFoundException("Entity not found");
-
             var property = entity.GetType().GetProperty("IsDeleted");
             if (property != null && property.PropertyType == typeof(bool))
             {
                 var isDeleted = (bool)property.GetValue(entity);
-                if (isDeleted)
-                {
-                    throw new Exception("Entity is already deleted");
-                }
-                else
+                if (!isDeleted)
                 {
                     property.SetValue(entity, true);
                     Update(entity);

@@ -10,8 +10,18 @@ namespace HR_System.Services.Mapping
         {
             CreateMap<Employee, GetEmployeeDTO>().AfterMap((src, dest) =>
             {
-                dest.DepartmentName = src.AssignedDepartment.Name;
+                dest.DepartmentName = src.AssignedDepartment?.Name;
                 dest.DepartmentNumber = src.Dept_Num;
+            });
+
+            CreateMap<CreateEmployeeDTO, Employee>().AfterMap((src, dest) =>
+            {
+                dest.Dept_Num = src.DepartmentNumber;
+            });
+            
+            CreateMap<EditEmployeeDTO, Employee>().AfterMap((src, dest) =>
+            {
+                dest.Dept_Num = src.DepartmentNumber;
             });
         }
     }

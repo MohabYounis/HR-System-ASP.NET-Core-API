@@ -28,8 +28,8 @@ namespace HR_System.Services.Services
         public async Task AddAsync(TEntity entity)
             => await _unitOfWork.Repository<TEntity>().AddAsync(entity);
 
-        public async Task DeleteAsync(int id)
-            => await _unitOfWork.Repository<TEntity>().DeleteAsync(id);
+        public async Task DeleteAsync(TEntity entity)
+            => await _unitOfWork.Repository<TEntity>().DeleteAsync(entity);
 
         public void Update(TEntity entity)
             => _unitOfWork.Repository<TEntity>().Update(entity);
