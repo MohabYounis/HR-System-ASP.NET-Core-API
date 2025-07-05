@@ -38,10 +38,15 @@ namespace HR_System.Core.Specifications.EmployeeSpecifications
             AddPagination((specParams.PageIndex - 1) * specParams.PageSize, specParams.PageSize);
         }
 
-        public EmployeeWithDepartmentSpecifications(string ssn) : base(e => e.SSN == ssn)
+        public EmployeeWithDepartmentSpecifications(string ssn) 
+            : base(e => e.SSN == ssn)
         {
             addIncludes();
         }
+
+        public EmployeeWithDepartmentSpecifications(string ssn, string telephone) 
+            : base (e => e.SSN == ssn || e.Telephone == telephone)
+        { }
 
         private void addIncludes()
         {

@@ -12,7 +12,7 @@ namespace HR_System.Core.Repositories.Contract
         Task<TEntity> GetItemWithSpecAsync(ISpecifications<TEntity> spec);
         Task AddAsync(TEntity entity);
         void Update(TEntity entity);
-        Task DeleteAsync(int id);
+        Task DeleteAsync(TEntity entity);
         Task<int> GetCountAsync(ISpecifications<TEntity> spec);
     }
 }

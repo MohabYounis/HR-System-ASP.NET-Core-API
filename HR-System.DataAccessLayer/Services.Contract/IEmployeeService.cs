@@ -7,7 +7,10 @@ namespace HR_System.Core.Services.Contract
 {
     public interface IEmployeeService : IBaseService<Employee>
     {
-        Task<Pagination<GetEmployeeDTO>> GetPaginatedEmployeesWithSortingFilterationSearhing(EmployeeSpecParams specParams);
-        Task<GetEmployeeDTO> GetEmployeeById(string ssn);
+        Task<GeneralResponse> GetPaginatedEmployeesWithSortingFilterationSearhing(EmployeeSpecParams specParams);
+        Task<GeneralResponse> GetEmployeeById(string ssn);
+        Task<GeneralResponse> AddEmployeeIfNoExist(CreateEmployeeDTO employee);
+        Task<GeneralResponse> EditEmployeeIfExist(string ssn, EditEmployeeDTO employeeFromReq);
+        Task<GeneralResponse> DeleteEmployeeIfExist(string ssn);
     }
 }

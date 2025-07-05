@@ -3,7 +3,6 @@ using HR_System.Core.Services.Contract;
 using HR_System.Core.UnitsOfWork.Contract;
 using HR_System.Repos.HrCon;
 using HR_System.Repos.UnitsOfWork;
-using HR_System.Services.Mapping;
 using HR_System.Services.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,8 +14,10 @@ namespace HR_System.Presentation
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddControllers();
+            // Stop default filtration before actions. 
+            builder.Services.AddControllers().ConfigureApiBehaviorOptions(
+                options => options.SuppressModelStateInvalidFilter = true);
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
